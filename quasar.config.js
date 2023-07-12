@@ -28,7 +28,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
-    boot: ["i18n", "axios"],
+    boot: ["i18n", "axios", "firebaseConnection"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
@@ -69,8 +69,15 @@ module.exports = configure(function (/* ctx */) {
       publicPath: '/app/',
       // analyze: true,
       env: {
-        APP_NAME: "Quasar App",
+        FIREBASE_APP_NAME: "Quasar App",
+        FIREBASE_API_KEY: "AIzaSyCjcyhzhuyE3MxHWsQg_wa2OV1yJMs8020",
+        FIREBASE_AUTH_DOMAIN: "csgh-web-app.firebaseapp.com",
+        FIREBASE_PROJECT_ID: "csgh-web-app",
+        FIREBASE_STORAGE_BUCKET: "csgh-web-app.appspot.com",
+        FIREBASE_MESSAGING_ID: "1030954041027",
+        FIREBASE_APP_ID: "1:1030954041027:web:5f85376e295bd9a8b12c76"
       },
+
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,

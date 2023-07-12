@@ -9,6 +9,15 @@ import {
 } from "utils/validators";
 import { createInputFields, createTableColumns } from "models/functions";
 import { emailValidator } from "src/utils/validators";
+import {
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+  deleteDoc,
+  getDocs,
+} from "firebase/firestore";
+import { db } from "src/boot/firebaseConnection";
 
 const model = [
   {
@@ -97,62 +106,84 @@ const model = [
   },
 ];
 
-export const createFields = (overrides = []) => createInputFields(model, overrides);
+export const createFields = (overrides = []) =>
+  createInputFields(model, overrides);
 
 export const createColumns = () => createTableColumns(model);
 
-export const getPatients = () => {
-  return new Promise((resolve) => {
-    setTimeout(function () {
-      resolve(JSON.parse(localStorage.getItem("patients") || "[]"));
-    }, 1000);
+export const getPatients = async () => {
+  // return new Promise((resolve) => {
+  //   setTimeout(function () {
+  //     resolve(JSON.parse(localStorage.getItem("patients") || "[]"));
+  //   }, 1000);
+  // });
+
+  const querySnapshot = await getDocs(collection(db, "patients"));
+
+  let patients = [];
+  querySnapshot.forEach((doc) => {
+    patients.push({ ...doc.data(), id: doc.id });
   });
+
+  return patients;
 };
 
-export const createPatient = (data) => {
-  return new Promise((resolve) => {
-    setTimeout(async () => {
-      let patients = await getPatients();
-      data.id = patients.length + 1;
-      patients.push(data);
-      localStorage.setItem("patients", JSON.stringify(patients));
-      resolve(data);
-    }, 1000);
-  });
+export const createPatient = async (data) => {
+  // return new Promise((resolve) => {
+  //   setTimeout(async () => {
+  //     let patients = await getPatients();
+  //     data.id = patients.length + 1;
+  //     patients.push(data);
+  //     localStorage.setItem("patients", JSON.stringify(patients));
+  //     resolve(data);
+  //   }, 1000);
+  // });
+
+  const docRef = await addDoc(collection(db, "patients"), data);
+
+  return docRef.id;
 };
 
-export const updatePatient = (id, data) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(async () => {
-      let patients = await getPatients();
+export const updatePatient = async (id, data) => {
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(async () => {
+  //     let patients = await getPatients();
 
-      let index = patients.findIndex((patient) => patient.id === id);
-      if (index === -1) {
-        reject("Patient not found");
-        return;
-      }
+  //     let index = patients.findIndex((patient) => patient.id === id);
+  //     if (index === -1) {
+  //       reject("Patient not found");
+  //       return;
+  //     }
 
-      patients[index] = { ...patients[index], ...data };
-      localStorage.setItem("patients", JSON.stringify(patients));
-      resolve(patients[index]);
-    }, 1000);
-  });
+  //     patients[index] = { ...patients[index], ...data };
+  //     localStorage.setItem("patients", JSON.stringify(patients));
+  //     resolve(patients[index]);
+  //   }, 1000);
+  // });
+
+  await setDoc(doc(db, "patients", id), data);
+
+  return id
 };
 
-export const deletePatient = (id) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(async () => {
-      let patients = await getPatients();
+export const deletePatient = async (id) => {
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(async () => {
+  //     let patients = await getPatients();
 
-      let index = patients.findIndex((patient) => patient.id === id);
-      if (index === -1) {
-        reject("Patient not found");
-        return;
-      }
+  //     let index = patients.findIndex((patient) => patient.id === id);
+  //     if (index === -1) {
+  //       reject("Patient not found");
+  //       return;
+  //     }
 
-      patients.splice(index, 1);
-      localStorage.setItem("patients", JSON.stringify(patients));
-      resolve(patients[index]);
-    }, 1000);
-  });
+  //     patients.splice(index, 1);
+  //     localStorage.setItem("patients", JSON.stringify(patients));
+  //     resolve(patients[index]);
+  //   }, 1000);
+  // });
+
+  await deleteDoc(doc(db, "patients", id));
+
+  return id
 };
