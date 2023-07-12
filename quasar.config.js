@@ -75,7 +75,8 @@ module.exports = configure(function (/* ctx */) {
         FIREBASE_PROJECT_ID: "csgh-web-app",
         FIREBASE_STORAGE_BUCKET: "csgh-web-app.appspot.com",
         FIREBASE_MESSAGING_ID: "1030954041027",
-        FIREBASE_APP_ID: "1:1030954041027:web:5f85376e295bd9a8b12c76"
+        FIREBASE_APP_ID: "1:1030954041027:web:5f85376e295bd9a8b12c76",
+        API_URL: "http://localhost:8000"
       },
 
       // rawDefine: {}
