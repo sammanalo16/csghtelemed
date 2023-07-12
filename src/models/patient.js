@@ -1,5 +1,6 @@
 import CustomInput from "components/CustomInput.vue";
 import CustomSelect from "components/CustomSelect.vue";
+import SearchPatientComponent from "components/SearchPatient.vue";
 import {
   requiredValidator,
   phoneValidator,
@@ -18,8 +19,17 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "src/boot/firebaseConnection";
+import { api } from "boot/axios"
 
 const model = [
+  {
+    component: SearchPatientComponent,
+    model: "hospital_number",
+    attrs: {
+      label: "Hospital Number",
+    },
+    col: 6,
+  },
   {
     component: CustomInput,
     model: "last_name",
@@ -187,3 +197,23 @@ export const deletePatient = async (id) => {
 
   return id
 };
+
+export const searchPatient = async (lastName = null, firstName = null, middleName = null) => {
+  const query = {}
+
+  if (lastName && lastName.length > 0) {
+    query.patlast = lastName
+  }
+
+  if (firstName && firstName.length > 0) {
+    query.patfirst = firstName
+  }
+
+  if (middleName && middleName.length > 0) {
+    query.patmiddle = middleName
+  }
+
+  const response = await api.get("/api/patients?" + Object.entries(query).map(([key, val]) => `${key}=${val}`).join('&'))
+
+  return response.data.data
+}
