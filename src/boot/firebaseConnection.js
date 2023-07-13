@@ -1,5 +1,8 @@
 import { boot } from "quasar/wrappers"
 import initialize from '../services/firebase'
+import { onAuthStateChanged } from "firebase/auth";
+
+console.log(process.env.FIREBASE_API_KEY)
 
 const {firebaseApp, auth, db} = initialize({
   apiKey: process.env.FIREBASE_API_KEY,
@@ -13,6 +16,14 @@ const {firebaseApp, auth, db} = initialize({
 export default boot(() => {
   // Validation that our service structure is working
   console.log('Firebase App Instantiation:', firebaseApp)
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  });
 });
 
 export { firebaseApp, auth, db }

@@ -68,17 +68,7 @@ module.exports = configure(function (/* ctx */) {
 
       publicPath: '/app/',
       // analyze: true,
-      env: {
-        FIREBASE_APP_NAME: "Quasar App",
-        FIREBASE_API_KEY: "AIzaSyCjcyhzhuyE3MxHWsQg_wa2OV1yJMs8020",
-        FIREBASE_AUTH_DOMAIN: "csgh-web-app.firebaseapp.com",
-        FIREBASE_PROJECT_ID: "csgh-web-app",
-        FIREBASE_STORAGE_BUCKET: "csgh-web-app.appspot.com",
-        FIREBASE_MESSAGING_ID: "1030954041027",
-        FIREBASE_APP_ID: "1:1030954041027:web:5f85376e295bd9a8b12c76",
-        API_URL: "http://localhost:8000"
-      },
-
+      env: require('dotenv').config().parsed,
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -109,11 +99,7 @@ module.exports = configure(function (/* ctx */) {
       proxy: {
         // proxy all requests starting with /api to jsonplaceholder
         '/api': {
-          target: 'http://some.api.target.com:7070',
-          changeOrigin: true,
-          pathRewrite: {
-            '^/api': ''
-          }
+          target: 'http://localhost:8000',
         }
       }
     },
